@@ -1,37 +1,116 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, Lock, Heart, Bookmark, ArrowUpRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  Bookmark,
+  CalendarDays,
+  Heart,
+  LockKeyhole,
+} from "lucide-react";
+
+function fallbackAvatar(seed = "User") {
+  return `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(
+    seed
+  )}`;
+}
+
+function formatDate(date) {
+  if (!date) return "Unknown date";
+
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function LessonCard({ lesson }) {
-  const preview = lesson.description?.slice(0, 135) + (lesson.description?.length > 135 ? "..." : "");
+  const [imageFailed, setImageFailed] = useState(false);
+  const [avatarFailed, setAvatarFailed] = useState(false);
+
+  const title = lesson?.title || "Untitled Lesson";
+  const category = lesson?.category || "Personal Growth";
+  const tone = lesson?.emotionalTone || "Motivational";
+  const creatorName = lesson?.creatorName || "Unknown Author";
+  const accessLevel = lesson?.accessLevel || "Free";
+
+  const hasImage = lesson?.image && !imageFailed;
+
+  const creatorPhoto =
+    !avatarFailed && lesson?.creatorPhoto
+      ? lesson.creatorPhoto
+      : fallbackAvatar(creatorName);
+
   return (
-    <article className={`lessonCard ${lesson.locked ? "locked" : ""}`}>
+    <article className={`lessonCard ${lesson?.locked ? "locked" : ""}`}>
       <div className="lessonImageWrap">
-        {lesson.image ? <img src={lesson.image} alt={lesson.title} /> : <div className="imageFallback">Wisdom</div>}
-        <span className={`badge ${lesson.accessLevel === "Premium" ? "premium" : "free"}`}>{lesson.accessLevel}</span>
+        {hasImage ? (
+          <img
+            src={lesson.image}
+            alt={title}
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          <div className="imageFallback modernFallback">
+            <span>{category}</span>
+            <strong>{title.charAt(0).toUpperCase()}</strong>
+          </div>
+        )}
+
+        <span className={`badge ${accessLevel === "Free" ? "free" : ""}`}>
+          {accessLevel === "Premium" ? "Premium" : "Free"}
+        </span>
+
+        {lesson?.locked && (
+          <div className="premiumOverlay">
+            <LockKeyhole size={28} />
+            <small>Premium locked</small>
+          </div>
+        )}
       </div>
+
       <div className="lessonCardBody">
         <div className="pillRow">
-          <span>{lesson.category}</span>
-          <span>{lesson.emotionalTone}</span>
+          <span>{category}</span>
+          <span>{tone}</span>
         </div>
-        <h3>{lesson.title}</h3>
-        <p className={lesson.locked ? "blurredText" : ""}>{lesson.locked ? "Premium Lesson – Upgrade to view this wisdom." : preview}</p>
+
+        <h3 className="lessonTitleClamp">{title}</h3>
+
+        <p className={lesson?.locked ? "blurredText lessonDescClamp" : "lessonDescClamp"}>
+          {lesson?.description ||
+            "A meaningful reflection waiting to be explored."}
+        </p>
+
         <div className="creatorMini">
-          <img src={lesson.creatorPhoto || "https://api.dicebear.com/9.x/initials/svg?seed=Life"} alt={lesson.creatorName || "Life Learner"} />
+          <img
+            src={creatorPhoto}
+            alt={creatorName}
+            onError={() => setAvatarFailed(true)}
+          />
+
           <div>
-            <strong>{lesson.creatorName || "Life Learner"}</strong>
-            <small><CalendarDays size={13} /> {new Date(lesson.createdAt).toLocaleDateString()}</small>
+            <strong>{creatorName}</strong>
+            <small>
+              <CalendarDays size={13} />
+              {formatDate(lesson?.createdAt)}
+            </small>
           </div>
         </div>
+
         <div className="cardStats">
-          <span><Heart size={15} /> {lesson.likesCount || 0}</span>
-          <span><Bookmark size={15} /> {lesson.favoritesCount || 0}</span>
+          <span>
+            <Heart size={15} /> {lesson?.likesCount || 0}
+          </span>
+
+          <span>
+            <Bookmark size={15} /> {lesson?.favoritesCount || 0}
+          </span>
         </div>
-        {lesson.locked ? (
-          <Link className="btn ghost full" to="/pricing"><Lock size={16} /> Upgrade to Premium</Link>
-        ) : (
-          <Link className="btn primary full" to={`/lessons/${lesson._id}`}>See Details <ArrowUpRight size={16} /></Link>
-        )}
+
+        <Link className="btn primary full cardBtn" to={`/lessons/${lesson?._id}`}>
+          See Details <ArrowUpRight size={16} />
+        </Link>
       </div>
     </article>
   );
