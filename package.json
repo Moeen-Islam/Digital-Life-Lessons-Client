@@ -1,0 +1,29 @@
+{
+  "name": "digital-life-lessons-client",
+  "version": "1.0.0",
+  "description": "React client for Digital Life Lessons",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "axios": "^1.7.9",
+    "better-auth": "latest",
+    "framer-motion": "^11.15.0",
+    "html2pdf.js": "^0.14.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.1",
+    "react-router-dom": "^7.1.1",
+    "react-share": "^5.1.2",
+    "recharts": "^2.15.0",
+    "sweetalert2": "^11.15.3"
+  },
+  "devDependencies": {
+    "vite": "^6.0.7"
+  }
+}
