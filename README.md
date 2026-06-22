@@ -2,7 +2,7 @@
 
 ## Live URL
 
-Client Live Site: `https://digital-life-lessons-moeen.vercel.app`
+🔗 Live Site: [Digital Life Lessons](https://digital-life-lessons-moeen.vercel.app)
 
 ## Project Purpose
 
