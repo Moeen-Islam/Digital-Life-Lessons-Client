@@ -2,7 +2,9 @@ import axios from "axios";
 
 function cleanBaseUrl(url) {
   return String(url || "")
+    .replace(/^VITE_API_URL=/, "")
     .replace(/\/+$/, "")
+    .replace(/\/api\/auth$/, "")
     .replace(/\/api$/, "");
 }
 

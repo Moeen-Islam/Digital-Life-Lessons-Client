@@ -2,7 +2,9 @@ import { createAuthClient } from "better-auth/react";
 
 function cleanBaseUrl(url) {
   return String(url || "")
+    .replace(/^VITE_API_URL=/, "")
     .replace(/\/+$/, "")
+    .replace(/\/api\/auth$/, "")
     .replace(/\/api$/, "");
 }
 
