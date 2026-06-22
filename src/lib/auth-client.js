@@ -8,8 +8,13 @@ function cleanBaseUrl(url) {
     .replace(/\/api$/, "");
 }
 
+const fallbackBase =
+  import.meta.env.PROD && typeof window !== "undefined"
+    ? window.location.origin
+    : "http://localhost:5000";
+
 const API_BASE = cleanBaseUrl(
-  import.meta.env.VITE_API_URL || "http://localhost:5000"
+  import.meta.env.VITE_API_URL || fallbackBase
 );
 
 export const authClient = createAuthClient({

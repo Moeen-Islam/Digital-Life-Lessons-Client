@@ -8,12 +8,18 @@ function cleanBaseUrl(url) {
     .replace(/\/api$/, "");
 }
 
+const fallbackBase =
+  import.meta.env.PROD && typeof window !== "undefined"
+    ? window.location.origin
+    : "http://localhost:5000";
+
 export const API_BASE = cleanBaseUrl(
-  import.meta.env.VITE_API_URL || "http://localhost:5000"
+  import.meta.env.VITE_API_URL || fallbackBase
 );
 
 export const SITE_URL =
-  import.meta.env.VITE_SITE_URL || "http://localhost:5173";
+  import.meta.env.VITE_SITE_URL ||
+  (typeof window !== "undefined" ? window.location.origin : "http://localhost:5173");
 
 export const api = axios.create({
   baseURL: `${API_BASE}/api`,
